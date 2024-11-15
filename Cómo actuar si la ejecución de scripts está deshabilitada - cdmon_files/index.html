@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<!-- saved from url=(0195)https://widget.scrads.com/index.php?lang=es&location=&styletemplate=default&uuid=50e9804c-1cde-11ee-88ae-cf63436d3ce8&domain=cdmon.com&identifier=z7jyg6f1uejd66rf9zwlmm3iu0icn&session=jvqi7se2tkc -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript">
+		
+	let session; // Inicio de la página
+	let timeoutId; // ID para el setTimeout
+	let agente = 'false';
+	let contactar1 = 'false';
+	let contactar2 = 'false';
+
+// Validacion de session en tiempo:
+	function checkSessionAndReload() {
+	    if (!sessionStorage.getItem('session')) {
+	        createNewSessionAndReload();
+	    }
+	}
+	setInterval(checkSessionAndReload, 10000);
+
+// Funciones de control de sesión
+	// Función para eliminar la sesión
+		function removeSession() { 
+		    sessionStorage.removeItem('session');
+		}
+
+	// Función para extender la vida de la sesión    
+		function extendSession() { 
+		    // Verificar si la sesión ya está caducada
+		    if (!sessionStorage.getItem('session')) {
+		        createNewSessionAndReload();
+		        return;
+		    }
+		    
+		    if (timeoutId) {
+		        clearTimeout(timeoutId); // Limpiar el timeout anterior
+		    }
+		    timeoutId = setTimeout(removeSession, 1200000); // Establecer un nuevo timeout 3600000 / 900000 / 300000 / 60000
+		}
+
+	// Función crear nueva sesíón
+
+		function createNewSessionAndReload() {
+		    // Generar un nuevo valor de sesión y almacenarlo
+		    let session = Math.random().toString(36).substring(2);
+		    sessionStorage.setItem('session', session);
+		    //alert("nou xat");
+		    var baseURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+			var searchParams = new URLSearchParams(window.location.search);
+
+			// Si ya existe el parámetro "session", lo eliminamos
+			if (searchParams.has("session")) {
+			    searchParams.delete("session");
+			}
+		    // Añadir el nuevo valor para el parámetro "session"
+			searchParams.set("session", session);
+
+			// Recargar con el nuevo parámetro
+			window.location.href = baseURL + "?" + searchParams.toString();
+		}
+
+
+	if (sessionStorage.getItem('session')) {
+	    session = sessionStorage.getItem('session');
+	    extendSession(); // Extender la vida de la sesión existente
+	} else {
+	    createNewSessionAndReload(); // Crear una nueva sesión y recargar la página
+	}
+	
+	
+	window.parent.postMessage({ 
+		type: 'changeSession', 
+		valSession: session 
+	}, '*');
+	
+
+
+</script>
+
+
+
+
+	<title>Customer experience - Scrads</title>
+	    <link href="./style-user-v2.css" rel="stylesheet" crossorigin="anonymous">
+        <script defer="" src="./moment.min.js.descarga"></script>
+    <script defer="" src="./locales.min.js.descarga"></script>
+    <script defer="" src="./jquery-3.7.1.min.js.descarga"></script>
+    <script defer="" src="./ua-parser.min.js.descarga"></script>
+
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta http-equiv="Cache-control" content="public">
+
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+	<meta name="description" content="Discover how our chatbot can transform your business. Improve customer service by combining cutting-edge Artificial Intelligence with all the knowledge of your company.">
+	<link rel="canonical" href="https://scrads.com/">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Customer experience - Scrads">
+	<meta property="og:description" content="Discover how our chatbot can transform your business. Improve customer service by combining cutting-edge Artificial Intelligence with all the knowledge of your company.">
+	<meta property="og:url" content="https://scrads.com/">
+	<meta property="og:site_name" content="Scrads">
+	<meta property="og:image" content="https://widget.scrads.com/image/scrads-icon-big.png">
+	<meta property="og:image:width" content="300">
+	<meta property="og:image:height" content="300">
+	<meta property="og:image:type" content="image/jpeg">
+	<meta name="twitter:card" content="summary_large_image">
+		<link rel="stylesheet" href="./bootstrap-icons.min.css">
+	<style></style></head>
+<body data-new-gr-c-s-check-loaded="14.1208.0" data-gr-ext-installed="">
+
+	<div id="scradsModal" style="display:none;">
+	    <div id="modalContenido">
+	        <span id="cerrarModal" style="cursor:pointer;">×</span>
+	        <canvas id="miGrafica"></canvas>
+	    </div>
+	</div>
+	<div id="scradsModalInfo" style="display:none;">
+	    <div id="modalContenidoInfo">
+	    	<i class="bi bi-x" id="cerrarModalInfo" style="cursor:pointer;"></i>
+	    	<h3>
+	    		Configuraciones	    	</h3>
+	        <p>
+	        		        		Recuerda que en cualquier momento puedes solicitar que entre un agente real	        								y solicitar que nos pongamos en contacto contigo facilitándonos tus datos de contacto.						        					<br><br>
+			</p>
+			<p>
+	    		<input type="checkbox" id="locution_msg">
+				<label class="container" for="locution_msg">Activar locución de voz.</label>
+	        
+	        	<br>
+	        
+	    		<input type="checkbox" id="efects_msg" checked="">
+				<label class="container" for="efects_msg">Activar efectos de sonidos.</label>
+	        </p>
+	    </div>
+	</div>
+	<div id="scradsModalMoreInfo" style="display:none;">
+	    <div id="modalContenidoMoreInfo">
+	    	<i class="bi bi-x" id="cerrarModalMoreInfo" style="cursor:pointer;"></i>
+	    	<h3>
+	    		Más información	    	</h3>
+	        <div id="scradsModalMoreInfoContentDiv">
+	        	<p id="scradsModalMoreInfoContent"></p>
+	        </div>
+	    </div>
+	</div>
+	<div id="scradsModalHelp" style="display:none;">
+	    <div id="modalContenidoHelp">
+	    	<i class="bi bi-x" id="cerrarModalHelp" style="cursor:pointer;"></i>
+	    	<h3>
+	    		¿Qué puede hacer nuestra AI para ayudarte?	    	</h3>
+	        <p>
+	    		Estamos aquí para ti. Con nuestra IA a tu disposición, obtendrás respuestas instantáneas a tus preguntas.	        	
+	        </p>
+	    </div>
+	</div>
+	<a id="dynamicLink" href="https://widget.scrads.com/index.php?lang=es&amp;location=&amp;styletemplate=default&amp;uuid=50e9804c-1cde-11ee-88ae-cf63436d3ce8&amp;domain=cdmon.com&amp;identifier=z7jyg6f1uejd66rf9zwlmm3iu0icn&amp;session=jvqi7se2tkc" target="_blank" style="display: none;">Link</a>
+
+			<div id="chat-header">
+			<div>
+				cdmon				<small><a href="tel:911 822 767">911 822 767</a> · info@cdmon.com</small>
+			</div>
+			<i class="bi bi-gear-fill" id="openInfoButton"></i>
+					</div>
+	    <div id="chat-box">
+    		    	<div id="chat-box-header">
+	    		<a target="_blank" href="https://www.cdmon.com/pdfs/legal/es/politica-de-privacidad.pdf">Política de privacidad</a> | <a target="_blank" href="https://scrads.com/aviso-legal-chat-es/">Aviso legal</a>
+	    	</div>
+    	    		
+    	<div class="msg-assistant puff-in-tl3">Hola  <br>Soy cdmon, ¿en qué puedo ayudarte?</div><div class="msg-assistant-date"> - </div>    </div>
+    
+    <div id="send-box" style="display: none">
+					<input id="chat-input" name="chat-input" type="text" autocomplete="off">
+			<button id="send-button"></button>
+		    </div>
+    <div id="create-box" style="">
+		
+		<div class="create-button-div">
+			<h1>
+				¡Bienvenid@ a nuestro soporte online!			</h1>
+
+			
+			<input value="" type="text" id="nombre" name="nombre" minlength="2" maxlength="50" placeholder="Tu nombre">
+
+			<button id="create-button">Nueva conversación</button>
+			<div id="name_help" style="display:none;">Por favor ingresa un nombre válido (solo letras y espacios, entre 2 y 50 caracteres)</div>
+
+
+			<p>
+	        		        		Recuerda que en cualquier momento puedes solicitar que entre un agente real	        								y solicitar que nos pongamos en contacto contigo facilitándonos tus datos de contacto.						        					<br>
+			</p>
+			<p>
+
+				<input type="checkbox" id="locution_msg_pre">
+				<label class="container" for="locution_msg_pre">Activar locución de voz.</label>
+
+				<br>
+
+				<input type="checkbox" id="efects_msg_pre" checked="">
+				<label class="container" for="efects_msg_pre">Activar efectos de sonidos.</label>
+
+							    	<br><br>
+			    	</p><div id="chat-box-header">
+			    		<a target="_blank" href="https://www.cdmon.com/pdfs/legal/es/politica-de-privacidad.pdf">Política de privacidad</a> | <a target="_blank" href="https://scrads.com/aviso-legal-chat-es/">Aviso legal</a>
+			    	</div>
+		    				<p></p>
+		</div>
+
+    </div>
+    <div id="marketing">
+    	<a target="_blank" href="https://scrads.com/">Por scrads.com</a>
+    </div>
+    <audio id="audioPing" src="https://widget.scrads.com/mp3/ping.mp3" style="display: none;"></audio>
+    <audio id="audioPong" src="https://widget.scrads.com/mp3/pong.mp3" style="display: none;"></audio>
+    
+
+    <script>
+    	const urlParams = new URLSearchParams(window.location.search);
+
+        let chat_id;
+        let conversacion;
+        let is_captured_by_agent = false;
+        const identifier = urlParams.has('identifier') ? urlParams.get('identifier') : null;
+
+		document.addEventListener("DOMContentLoaded", function() {
+		    var inputElement = document.getElementById("chat-input");
+		    if (inputElement) {
+		        inputElement.focus();
+		    }
+		});
+
+// --------------------------------------------------------------------------------------
+//								FUNCIONES DE FUNCTION
+// --------------------------------------------------------------------------------------
+		function generarColorAleatorio() {
+			var rojo = Math.floor(Math.random() * 256);
+			var verde = Math.floor(Math.random() * 256);
+			var azul = Math.floor(Math.random() * 256);
+			return 'rgba(' + rojo + ', ' + verde + ', ' + azul + ', 0.5)';
+		}
+
+		function jquery_Graph(tipoGrafica, valoresX, valoresY, titleGraph, leyendaX, leyendaY) {
+		    $('#miGrafica').remove();
+    		$('#modalContenido').append('<canvas id="miGrafica"></canvas>');
+
+
+		    var ctx = $('#miGrafica')[0].getContext('2d');
+		    var colores = valoresY.map(function() {
+			    return generarColorAleatorio();
+			});
+
+
+
+		    var miGrafica = new Chart(ctx, {
+		        type: tipoGrafica,
+		        data: {
+		            labels: valoresX,
+		            datasets: [{
+		                data: valoresY,
+		                backgroundColor: colores,
+		                borderColor: colores,
+		                borderWidth: 1
+		            }]
+		        },
+		        options: {
+		        	plugins: {
+		            	title: {
+		                	display: true,
+		                	text: titleGraph,
+		                },
+		                legend: { 
+			                display: false
+			            }
+		            },
+		            scales: {
+			            x: {
+			                title: {
+			                    display: true,
+			                    text: leyendaX // Aquí pones el título del eje X
+			                }
+			            },
+			            y: {
+			                title: {
+			                    display: true,
+			                    text: leyendaY // Aquí pones el título del eje Y
+			                }
+			            }
+			        }
+		        }
+		    });
+		    		    
+
+		    $('#cerrarModal').click(function() { // Evento para cerrar el modal
+		        $('#scradsModal').hide();
+		    });
+
+		    
+		}
+
+
+		function jquery_OpenURL(url) {
+		    var dynamicLink = document.getElementById('dynamicLink');
+		    dynamicLink.href = url;
+		    dynamicLink.click();
+		}
+
+// --------------------------------------------------------------------------------------
+//								AUDIOS
+// --------------------------------------------------------------------------------------
+	function reproducirAudioPong() {
+	    var audioPlayer = document.getElementById('audioPong');
+	    audioPlayer.play();
+	}
+	function reproducirAudioPing() {
+		var audioPlayer = document.getElementById('audioPing');
+		audioPlayer.play();
+	}
+
+	// Control de audio
+		var locution_msg_pre = document.getElementById("locution_msg_pre");
+	    var locution_msg = document.getElementById("locution_msg");
+
+	    locution_msg_pre.addEventListener("click", function() {
+	        locution_msg.checked = locution_msg_pre.checked;
+	    });
+
+	// Control de audio
+		var efects_msg_pre = document.getElementById("efects_msg_pre");
+	    var efects_msg = document.getElementById("efects_msg");
+
+	    efects_msg_pre.addEventListener("click", function() {
+	        efects_msg.checked = efects_msg_pre.checked;
+	    });
+
+	// Obtener el valor de locution_msg de la URL
+					document.getElementById("locution_msg").checked = false;
+			
+					document.getElementById("efects_msg").checked = false;
+		
+
+
+// --------------------------------------------------------------------------------------
+//								CRIDA PER CREAR EL CHAT
+// --------------------------------------------------------------------------------------
+		document.getElementById('create-button').addEventListener('click', function() {
+			
+			var nombre = document.getElementById("nombre").value;
+
+			//if (nombre.trim() !== '') {
+			if (/^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(nombre)) {
+				this.disabled = true;
+				var nameHelp = document.getElementById("name_help");
+				nameHelp.style.display = 'none';
+
+				var button = this;
+				button.disabled = true; // Desactivar el botón para evitar clics adicionales
+	            // Crear un objeto XMLHttpRequest
+	            var xhr = new XMLHttpRequest();
+
+	            var timestamp = new Date().getTime();
+
+	            // Obtener el agente de usuario del navegador
+					var parser = new UAParser(); // Crear un objeto de instancia de UAParser
+					// Analizar el agente de usuario
+					var result = parser.getResult();
+					// Extraer la información relevante
+					var browser = result.browser; 
+					var browserVersion = result.device; 
+					var platform = result.os; 
+					var device = result.engine; 
+
+			    //var url = 'insert-chat.php?client_id=2&open_ai_id=1&ai_id=2&ip=179.60.173.44&identifier=z7jyg6f1uejd66rf9zwlmm3iu0icn&ai_assistant_id=&session=' + session + '&timestamp=' + timestamp + '&nombre=' + nombre;
+
+
+			    var url = 'insert-chat.php?client_id=2&open_ai_id=1&ai_id=2&ip=179.60.173.44&identifier=z7jyg6f1uejd66rf9zwlmm3iu0icn&ai_assistant_id=&session=' + session + '&timestamp=' + timestamp + '&nombre=' + nombre + '&browser=' + browser + '&browserVersion=' + browserVersion + '&platform=' + platform + '&device=' + device;
+
+			    //console.log(url);
+
+			    xhr.open('POST', url, true);
+	            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	            //console.log("session: " + session);
+	            xhr.onload = function() {
+	                if (this.status === 200) {
+	                	var urlCompleta = window.location.href;
+						// Verifica si la URL ya tiene la cadena "&session="
+						if (urlCompleta.includes("&session=")) {
+						    // Extrae el valor después de "&session="
+						    var sessionValue = urlCompleta.split("&session=")[1];
+						    // Si no hay un valor después de "&session=" o si ese valor es el inicio de otro parámetro
+						    if (!sessionValue || sessionValue.includes("&")) {
+						        newUrl = urlCompleta + session; // Asume que tienes el valor de 'session' desde alguna parte
+						    } else {
+						        newUrl = urlCompleta; // La URL ya tiene un valor para 'session'
+						    }
+						} else {
+						    // Si no tiene "&session=", simplemente añade el valor de 'session'
+						    newUrl = urlCompleta + "&session=" + session;
+						}
+
+						var locutionChecked = document.getElementById("locution_msg_pre").checked;
+						if (locutionChecked) {
+						    newUrl += "&locution_msg=true";
+						}
+
+						var effectsChecked = document.getElementById("efects_msg_pre").checked;
+						if (effectsChecked) {
+						    newUrl += "&efects_msg=true";
+						}
+
+						// var event = new CustomEvent('changeIframeSrc', { detail: { newUrl: newUrl } });
+						// window.parent.dispatchEvent(event);
+						// console.log("newUrl: " + newUrl);
+						window.parent.postMessage({ type: 'changeIframeSrc', newUrl: newUrl }, '*'); // Enviar un mensaje al documento 
+
+	                } else {
+	                    console.error('Hubo un error al intentar insertar en la base de datos');
+	                }
+	            };
+	            xhr.send(); // Envía la solicitud al archivo PHP
+			}else{
+				var nameHelp = document.getElementById("name_help");
+				nameHelp.style.display = 'block';
+			}
+            
+        });
+
+
+	document.addEventListener('keydown', function(event) {
+		if (event.key === 'Enter') {
+			document.getElementById('create-button').click();
+		}
+	});
+
+
+	// Modal HELP
+		
+		var modalInfo = document.getElementById('scradsModalInfo');	
+		var openInfoButton = document.getElementById('openInfoButton');	    
+	    var cerrarModalInfo = document.getElementById('cerrarModalInfo');
+
+	    openInfoButton.addEventListener('click', function() { // Evento para abrir el modal
+		    modalInfo.style.display = 'block';
+		});
+		cerrarModalInfo.addEventListener('click', function() { // Evento para abrir el modal
+		    modalInfo.style.display = 'none';
+		});
+
+
+		var modalMoreInfo = document.getElementById('scradsModalMoreInfo');	
+		var cerrarModalMoreInfo = document.getElementById('cerrarModalMoreInfo');
+
+		document.querySelectorAll('.more_info').forEach(function(openMoreInfoButton) {
+		    openMoreInfoButton.addEventListener('click', function() { // Evento para abrir el modal
+		        var htmlFields = this.getAttribute('data-html-fields');
+		        $('#scradsModalMoreInfoContent').html(htmlFields);
+		        modalMoreInfo.style.display = 'block';
+		    });
+		});
+		document.addEventListener('click', function(event) {
+			if (event.target.classList.contains('more_info')) {
+				var htmlFields = event.target.getAttribute('data-html-fields');
+		        document.getElementById('scradsModalMoreInfoContent').innerHTML = htmlFields;
+		        modalMoreInfo.style.display = 'block';
+			}
+		});
+
+		cerrarModalMoreInfo.addEventListener('click', function() { // Evento para cerrar el modal
+		    modalMoreInfo.style.display = 'none';
+		});
+
+		
+
+		function isMobileDevice() {
+		    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && (typeof window.orientation !== 'undefined' || navigator.userAgent.indexOf('IEMobile') !== -1);
+		}
+		function isFirefox() {
+		    return typeof InstallTrigger !== 'undefined';
+		}
+		function isChrome() {
+		    return /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) && !/Edg/.test(navigator.userAgent);
+		}
+		function isEdge() {
+		    return /Edg/.test(navigator.userAgent);
+		}
+
+		function ajustarAltura() {
+			//alturaVisible = window.visualViewport.height;		
+			//alturaVisible = window.innerHeight;
+			alturaVisible = window.outerHeight;
+			//alturaVisible = document.documentElement.clientHeight;
+			if (isFirefox()) {
+				//alert ("1");
+		        alturaVisible = alturaVisible - 214;
+		        document.querySelector('#send-box').style.bottom = '76px';
+		        document.querySelector('#marketing').style.bottom = '65px';
+		        document.querySelector('#send-button').style.bottom = '90px';
+		    } else if (isChrome()) {
+		    	//alert ("2");
+		        alturaVisible = alturaVisible - 166;
+		        document.querySelector('#send-box').style.bottom = '76px';
+		        document.querySelector('#marketing').style.bottom = '65px';
+		        document.querySelector('#send-button').style.bottom = '90px';
+		    } else if (isEdge()) {
+		    	//alert ("3");
+		        alturaVisible = alturaVisible - 166;
+		        document.querySelector('#send-box').style.bottom = '126px';
+		        document.querySelector('#marketing').style.bottom = '115px';
+		        document.querySelector('#send-button').style.bottom = '140px';
+		    } else {
+		    	//alert (alturaVisible);
+		        alturaVisible = alturaVisible - 350;
+		        document.querySelector('#send-box').style.bottom = '120px';
+		        document.querySelector('#marketing').style.bottom = '110px';
+		        document.querySelector('#send-button').style.bottom = '135px';
+		    }
+		    //alert (alturaVisible);
+
+            document.querySelector('#chat-box').style.height = `${alturaVisible}px`;
+            document.querySelector('#chat-box').style.display = 'flex';
+			document.querySelector('#chat-box').style.flexDirection = 'column';
+			document.querySelector('#chat-box').style.justifyContent = 'flex-end';
+
+
+        }
+
+		if (isMobileDevice()) {
+        	ajustarAltura();
+        	if (isFirefox()) {
+        		window.addEventListener('resize', ajustarAltura);
+        	}
+        	//document.querySelector('#chat-input').addEventListener('focus', ajustarAltura);
+        	//document.querySelector('#chat-input').addEventListener('blur', ajustarAltura);
+        }
+        
+
+
+    </script>
+
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>
